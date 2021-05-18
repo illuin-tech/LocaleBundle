@@ -4,6 +4,7 @@ php:
   - 7.2
   - 7.3
   - 7.4
+  - 8.0
 
 sudo: false
 
@@ -45,6 +46,9 @@ matrix:
     - php: 7.4
       env:
         - SYMFONY_VERSION='5.1.*'
+    - php: 8.0
+      env:
+        - SYMFONY_VERSION='5.2.*'
 
 before_install:
   - phpenv config-rm xdebug.ini || true
