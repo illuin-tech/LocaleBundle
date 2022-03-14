@@ -316,13 +316,13 @@ class LocaleListenerTest extends TestCase
         return new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
-    private function getListener($locale = 'en', $manager = null, $logger = null, $matcher = null)
+    private function getListener($manager = null, $locale = 'en', $logger = null, $matcher = null)
     {
         if (null === $manager) {
             $manager = $this->getGuesserManager();
         }
 
-        $listener = new LocaleListener($locale, $manager, $matcher, $logger);
+        $listener = new LocaleListener($manager, $locale, $matcher, $logger);
         $listener->setEventDispatcher(new EventDispatcher());
 
         return $listener;
