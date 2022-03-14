@@ -68,8 +68,8 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * Construct the guessermanager
      *
-     * @param string               $defaultLocale  Framework default locale
      * @param LocaleGuesserManager $guesserManager Locale Guesser Manager
+     * @param string               $defaultLocale  Framework default locale
      * @param LoggerInterface      $logger         Logger
      */
     public function __construct(LocaleGuesserManager $guesserManager, $defaultLocale = 'en', BestLocaleMatcher $bestLocaleMatcher = null, LoggerInterface $logger = null)

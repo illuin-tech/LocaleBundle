@@ -29,13 +29,13 @@ class LocaleController
     private $redirectToRoute;
 
     /**
-     * @param RouterInterface $router          Router Service
      * @param MetaValidator   $metaValidator   MetaValidator for locales
+     * @param RouterInterface $router          Router Service
      * @param bool            $useReferrer     From Config
      * @param null            $redirectToRoute From Config
      * @param string          $statusCode      From Config
      */
-    public function __construct(RouterInterface $router = null, MetaValidator $metaValidator, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
+    public function __construct(MetaValidator $metaValidator, RouterInterface $router = null, $useReferrer = true, $redirectToRoute = null, $statusCode = '302')
     {
         $this->router = $router;
         $this->metaValidator = $metaValidator;

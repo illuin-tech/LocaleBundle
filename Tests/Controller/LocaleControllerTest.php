@@ -34,7 +34,7 @@ class LocaleControllerTest extends TestCase
 
         $request = $this->getRequestWithBrowserPreferences();
         $request->setLocale('en');
-        $localeController = new LocaleController($this->getRouterMock(), $metaValidatorMock);
+        $localeController = new LocaleController($metaValidatorMock, $this->getRouterMock());
 
         $this->expectException('\InvalidArgumentException');
         $localeController->switchAction($request);
@@ -76,7 +76,7 @@ class LocaleControllerTest extends TestCase
         $request = $this->getRequestWithBrowserPreferences();
         $request->setLocale('de');
 
-        $localeController = new LocaleController(null, $this->getMetaValidatorMock());
+        $localeController = new LocaleController($this->getMetaValidatorMock(), null);
         $response = $localeController->switchAction($request);
         $this->assertEquals('http://localhost/', $response->getTargetUrl());
     }
@@ -86,7 +86,7 @@ class LocaleControllerTest extends TestCase
         $routerMock = $this->getRouterMock();
         $metaValidatorMock = $this->getMetaValidatorMock();
 
-        return new LocaleController($routerMock, $metaValidatorMock, $useReferrer, $redirectToRoute, $statuscode);
+        return new LocaleController($metaValidatorMock, $routerMock, $useReferrer, $redirectToRoute, $statuscode);
     }
 
     private function getRequestWithBrowserPreferences($route = "/")

@@ -37,7 +37,7 @@ class LocaleListenerTest extends TestCase
 {
     public function testDefaultLocaleWithoutParams()
     {
-        $listener = $this->getListener('fr', $this->getGuesserManager());
+        $listener = $this->getListener($this->getGuesserManager(), 'fr');
         $request = Request::create('/');
         $request->headers->set('Accept-language', '');
         $event = $this->getEvent($request);
@@ -60,7 +60,7 @@ class LocaleListenerTest extends TestCase
      */
     public function testAllowedLocaleWithMatcher($browserLocale, $allowedlocales, $expectedLocale, $fallback)
     {
-        $listener = $this->getListener($fallback, $this->getGuesserManager(), null, $this->getBestLocaleMatcher($allowedlocales));
+        $listener = $this->getListener($this->getGuesserManager(), $fallback, null, $this->getBestLocaleMatcher($allowedlocales));
         $request = Request::create('/');
         $request->headers->set('Accept-language', $browserLocale);
         $event = $this->getEvent($request);
@@ -71,7 +71,7 @@ class LocaleListenerTest extends TestCase
 
     public function testCustomLocaleIsSetWhenParamsExist()
     {
-        $listener = $this->getListener('fr', $this->getGuesserManager());
+        $listener = $this->getListener($this->getGuesserManager(), 'fr');
         $request = Request::create('/', 'GET');
         $request->attributes->set('_locale', 'de');
         $event = $this->getEvent($request);
@@ -83,7 +83,7 @@ class LocaleListenerTest extends TestCase
 
     public function testCustomLocaleIsSetWhenQueryExist()
     {
-        $listener = $this->getListener('fr', $this->getGuesserManager(array(0 => 'router', 1 => 'query', 2 => 'browser')));
+        $listener = $this->getListener($this->getGuesserManager(array(0 => 'router', 1 => 'query', 2 => 'browser')), 'fr');
         $request = Request::create('/', 'GET');
         $request->query->set('_locale', 'de');
         $event = $this->getEvent($request);
@@ -102,7 +102,7 @@ class LocaleListenerTest extends TestCase
     {
         $request = $this->getFullRequest();
         $manager = $this->getGuesserManager();
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('es', $request->getLocale());
@@ -118,7 +118,7 @@ class LocaleListenerTest extends TestCase
     {
         $request = $this->getFullRequest();
         $manager = $this->getGuesserManager(array(1 => 'browser', 2 => 'router'));
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
@@ -134,7 +134,7 @@ class LocaleListenerTest extends TestCase
     {
         $request = $this->getFullRequest(null);
         $manager = $this->getGuesserManager();
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr_FR', $request->getLocale());
@@ -145,7 +145,7 @@ class LocaleListenerTest extends TestCase
     {
         $request = $this->getRequestWithRouterParam();
         $manager = $this->getGuesserManager(array(0 => 'browser'));
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('en', $request->getLocale());
@@ -158,7 +158,7 @@ class LocaleListenerTest extends TestCase
                         ->method('dispatch')
                         ->with($this->isInstanceOf('Lunetics\LocaleBundle\Event\FilterLocaleSwitchEvent'), $this->equalTo(LocaleBundleEvents::onLocaleChange));
 
-        $listener = $this->getListener('fr', $this->getGuesserManager());
+        $listener = $this->getListener($this->getGuesserManager(), 'fr');
         $listener->setEventDispatcher($dispatcherMock);
 
 
@@ -175,7 +175,7 @@ class LocaleListenerTest extends TestCase
         $manager = $this->getGuesserManager();
         $manager->removeGuesser('session');
         $manager->removeGuesser('cookie');
-        $listener = $this->getListener('fr', $manager);
+        $listener = $this->getListener($manager, 'fr');
         $listener->setEventDispatcher($dispatcherMock);
 
         $event = $this->getEvent($this->getRequestWithRouterParam());
@@ -189,7 +189,7 @@ class LocaleListenerTest extends TestCase
     {
         $request = $this->getEmptyRequest();
         $manager = $this->getGuesserManager();
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('en', $request->getLocale());
@@ -200,7 +200,7 @@ class LocaleListenerTest extends TestCase
         $request = $this->getRequestWithRouterParam('fr');
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
         $manager = $this->getGuesserManager(array(0 => 'router'));
-        $listener = $this->getListener('en', $manager);
+        $listener = $this->getListener($manager, 'en');
         $event = $this->getEvent($request);
         $listener->onKernelRequest($event);
         $this->assertEquals('fr', $request->getLocale());
@@ -268,7 +268,7 @@ class LocaleListenerTest extends TestCase
             ->expects($this->exactly((int) $called))
             ->method('runLocaleGuessing');
 
-        $listener = $this->getListener('en', $guesserManager);
+        $listener = $this->getListener($guesserManager, 'en');
         $listener->setExcludedPattern($pattern);
 
         $event = $this->getEvent($request);
@@ -296,7 +296,7 @@ class LocaleListenerTest extends TestCase
             ->method('info')
             ->with($message, array());
 
-        $listener = $this->getListener('en', $guesserManager, $logger);
+        $listener = $this->getListener($guesserManager, 'en', $logger);
 
         $event = $this->getEvent($request);
 
